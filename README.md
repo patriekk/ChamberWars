@@ -30,7 +30,7 @@
 </div>
 
 > **Chamber Wars** is een eigen FiveM minigame die ik volledig heb uitgewerkt in Lua voor deze proefopdracht. 
-> Het concept draait om snelle arena-rondes waarin spelers met beperkte levens tegen elkaar spelen. Voor elke ronde is er een lobby, weapon vote, lives-systeem, killfeed, leaderboard en beloning voor de winnaar 
+> Het concept draait om snelle arena-rondes waarin spelers met beperkte levens tegen elkaar spelen. Voor elke ronde is er een lobby, weapon vote, lives-systeem, killfeed, leaderboard en beloning voor de winnaar.
 > Ik heb gekozen voor dit concept omdat het goed past bij CombatGain en genoeg ruimte geeft om te laten zien hoe ik omga met client/server logica, ox_lib, performance en anti-cheat checks.
 
 <br/>
