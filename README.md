@@ -39,7 +39,7 @@
 <tr>
 <td width="100%">
 
-## ⚡ Features
+
 ## ⚡ Features
 
 - 🔴 Eigen lobby starten en joinen
