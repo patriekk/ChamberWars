@@ -68,8 +68,9 @@
 
 ## 🎬 BEKIJK DE GAMEMODE IN ACTIE
 
-<br/>
 > Met dank aan Toepas voor het opnemen en uploaden van de demonstratievideo’s.
+<br/>
+
 <!-- Video en logo gameplay -->
 [![Gamemode Preview](https://toepas.com/combatgain/devsollifiles/ChamberWarsLogoOfficial.png)](https://www.youtube.com/watch?v=AQv3ghN2JH4)
 
