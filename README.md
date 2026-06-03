@@ -9,8 +9,8 @@
 <br/>
 
 <!-- Badges — pas de URLs aan naar jouw repo -->
-[![GitHub Stars](https://img.shields.io/github/stars/patriekk/JOUW-REPO?style=for-the-badge&logo=github&color=cc0000&labelColor=0d0d0d)](https://github.com/JOUW-USERNAME/JOUW-REPO/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/patriekk/JOUW-REPO?style=for-the-badge&logo=github&color=cc0000&labelColor=0d0d0d)](https://github.com/JOUW-USERNAME/JOUW-REPO/network)
+[![GitHub Stars](https://img.shields.io/github/stars/patriekk/JOUW-REPO?style=for-the-badge&logo=github&color=cc0000&labelColor=0d0d0d)](https://github.com/patriekk/ChamberWars/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/patriekk/JOUW-REPO?style=for-the-badge&logo=github&color=cc0000&labelColor=0d0d0d)](https://github.com/patriekk/ChamberWars/network/)
 [![Discord](https://img.shields.io/badge/DISCORD-Profile-cc0000?style=for-the-badge&logo=discord&logoColor=white&labelColor=0d0d0d)](https://discord.com/users/163249785405571073)
 
 <br/>
