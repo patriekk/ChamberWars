@@ -100,6 +100,17 @@ function showChamberMenu(data = {}) {
     chamberMenuEl.setAttribute('aria-hidden', 'false');
 }
 
+function updateChamberLobbies(lobbies = []) {
+    const visible = chamberLobbyListEl.classList.contains('is-visible');
+
+    chamberMenuData = {
+        ...chamberMenuData,
+        lobbies: Array.isArray(lobbies) ? lobbies : []
+    };
+    chamberCountEl.textContent = chamberMenuData.lobbies.length;
+    renderChamberLobbyList(visible);
+}
+
 function hideChamberMenu() {
     chamberMenuEl.classList.remove('is-visible');
     chamberMenuEl.setAttribute('aria-hidden', 'true');
@@ -693,6 +704,11 @@ window.addEventListener('message', (event) => {
 
     if (data.action === 'hideChamberMenu') {
         hideChamberMenu();
+        return;
+    }
+
+    if (data.action === 'updateChamberLobbies') {
+        updateChamberLobbies(data.lobbies || []);
         return;
     }
 

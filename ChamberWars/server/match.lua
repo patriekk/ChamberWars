@@ -21,6 +21,24 @@ local function notify(source, description, kind)
     TriggerClientEvent('CHW:client:notify', source, description, kind or 'inform')
 end
 
+local function isOutsideArena(coords)
+    if coords == nil then
+        return true
+    end
+
+    if not Config.Arena.center or not Config.Arena.radius or Config.Arena.radius <= 0.0 then
+        return true
+    end
+
+    if coords.z < Config.Arena.minZ or coords.z > Config.Arena.maxZ then
+        return true
+    end
+
+    local playerPosition = vec2(coords.x, coords.y)
+    local arenaPosition = vec2(Config.Arena.center.x, Config.Arena.center.y)
+    return #(playerPosition - arenaPosition) > Config.Arena.radius
+end
+
 local function lobbyById(lobbyId)
     return CHW.State.lobbies[tonumber(lobbyId)]
 end
@@ -109,6 +127,10 @@ local function activeLobbies()
     end)
 
     return lobbies
+end
+
+local function broadcastLobbyList()
+    TriggerClientEvent('CHW:client:lobbyListUpdate', -1, activeLobbies())
 end
 
 local function lobbySnapshot(lobby)
@@ -285,6 +307,8 @@ local function removeLobby(lobby)
         clearCountdown()
         CHW.State.countdownToken = CHW.State.countdownToken + 1
     end
+
+    broadcastLobbyList()
 end
 
 local function resetLegacyQueue()
@@ -1018,6 +1042,7 @@ function CHW.Match.StartLobby(source)
 
     notify(source, ("%s's Lobby aangemaakt."):format(lobby.hostName), 'success')
     broadcastLobby(lobby)
+    broadcastLobbyList()
     startNextCountdown()
     return true
 end
@@ -1035,6 +1060,7 @@ function CHW.Match.JoinQueue(source, lobbyId)
 
     notify(source, ("%s's Lobby gejoind."):format(lobby.hostName or 'Host'), 'success')
     broadcastLobby(lobby)
+    broadcastLobbyList()
     startNextCountdown()
     return true
 end
@@ -1046,6 +1072,7 @@ function CHW.Match.Leave(source)
         refreshOpenLobby(lobby)
         cancelCountdownIfNotEnough(lobby)
         broadcastLobby(lobby)
+        broadcastLobbyList()
         startNextCountdown()
         return true
     end
@@ -1268,6 +1295,7 @@ function CHW.Match.Start(lobbyId)
             match.testBots[i] = true
         end
     end
+    match.testMode = next(match.testBots) ~= nil
     CHW.State.matches[match.id] = match
     CHW.State.current = match
     local spawnOrder = {}
@@ -1301,11 +1329,20 @@ function CHW.Match.Start(lobbyId)
     end
     broadcastLeaderboard(match)
 
+    Wait(Config.Match.preVoteLoadMs or 2500)
+    if not isMatchActive(match) then
+        return
+    end
+
     CHW.Match.BeginWeaponVote(match)
 
     CreateThread(function()
         while isMatchActive(match) do
             Wait(1000)
+            if match.finishing then
+                return
+            end
+
             if os.time() - match.startedAt >= Config.Arena.maxDurationSeconds then
                 CHW.Match.Finish(nil, 'De maximale matchduur is bereikt.', match)
                 return
@@ -1314,10 +1351,14 @@ function CHW.Match.Start(lobbyId)
             for source, player in pairs(match.players) do
                 if match.combatActive and player.alive and GetPlayerName(source) then
                     local ped = GetPlayerPed(source)
-                    if ped > 0 and #(GetEntityCoords(ped) - Config.Arena.center) > Config.Arena.radius then
+                    local coords = ped > 0 and GetEntityCoords(ped) or nil
+                    if coords and isOutsideArena(coords) then
                         if not player.outsideSince then
                             player.outsideSince = os.time()
                             notify(source, 'Keer terug naar de arena of je verliest een leven.', 'error')
+                            TriggerClientEvent('chat:addMessage', source, {
+                                args = { Config.ArenaName, 'Keer terug naar de arena of je verliest een leven.' }
+                            })
                         elseif os.time() - player.outsideSince >= Config.Arena.boundaryGraceSeconds then
                             CHW.Match.ApplyHit(source, nil, 'boundary')
                         end
@@ -1557,7 +1598,7 @@ function CHW.Match.ReportHit(shooter, target, weaponHash, headshot)
     local distance = #(GetEntityCoords(shooterPed) - GetEntityCoords(targetPed))
     local maxDistance = weaponType == 'knife'
         and (Config.Match.knifeHitMaxDistance or 5.0)
-        or (match.weapon and match.weapon.maxDistance or Config.Match.pistolHitMaxDistance or ((Config.Arena.radius * 2.0) + 20.0))
+        or (match.weapon and match.weapon.maxDistance or Config.Match.pistolHitMaxDistance or 170.0)
     if distance > maxDistance then
         CHW.Security.Log(shooter, ('reportHit rejected: distance %.2fm > %.2fm target=%s weapon=%s'):format(
             distance, maxDistance, tostring(target), tostring(weaponType)))
@@ -1634,14 +1675,7 @@ function CHW.Match.ReportTestBotKill(source, botIndex, weaponHash)
     end
 
     match.finishing = true
-    local delay = Config.TestBot.returnDelaySeconds or 0
-    TriggerClientEvent('CHW:client:winReturnDelay', source, delay)
-    CreateThread(function()
-        Wait(delay * 1000)
-        if isMatchActive(match) then
-            CHW.Match.Finish(source, nil, match)
-        end
-    end)
+    CHW.Match.Finish(source, nil, match)
 end
 
 function CHW.Match.CheckWinner(match)
@@ -1661,6 +1695,9 @@ function CHW.Match.Finish(winner, reason, match)
         return
     end
 
+    match.finishing = true
+    match.combatActive = false
+
     CHW.State.matches[match.id] = nil
     if CHW.State.current == match then
         CHW.State.current = nil
@@ -1668,7 +1705,7 @@ function CHW.Match.Finish(winner, reason, match)
     if winner and match.players[winner] then
         match.players[winner].won = true
         local xPlayer = CHW.ESX.GetPlayerFromId(winner)
-        if xPlayer and Config.Reward.enabled and Config.Reward.amount > 0 then
+        if not match.testMode and xPlayer and Config.Reward.enabled and Config.Reward.amount > 0 then
             if Config.Reward.account == 'money' then
                 xPlayer.addMoney(Config.Reward.amount, Config.ArenaName .. ' winner reward')
             else
@@ -1682,7 +1719,11 @@ function CHW.Match.Finish(winner, reason, match)
         if reason then
             notify(source, reason, 'inform')
         elseif source == winner then
-            notify(source, ('Je wint %s! Reward: $%d.'):format(Config.ArenaName, Config.Reward.amount), 'success')
+            if match.testMode then
+                notify(source, ('Je wint %s!'):format(Config.ArenaName), 'success')
+            else
+                notify(source, ('Je wint %s! Reward: $%d.'):format(Config.ArenaName, Config.Reward.amount), 'success')
+            end
         else
             notify(source, 'De match is afgelopen.', 'inform')
         end
@@ -1697,6 +1738,7 @@ function CHW.Match.DropPlayer(source)
         refreshOpenLobby(lobby)
         cancelCountdownIfNotEnough(lobby)
         broadcastLobby(lobby)
+        broadcastLobbyList()
         startNextCountdown()
     end
     local match = matchForPlayer(source)

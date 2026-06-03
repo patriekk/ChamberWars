@@ -29,7 +29,10 @@ files {
 }
 
 client_scripts {
+    '@PolyZone/client.lua',
+    '@PolyZone/CircleZone.lua',
     'client/main.lua',
+    'client/zones.lua',
     'client/npc.lua',
     'client/arena.lua'
 }
@@ -44,5 +47,6 @@ server_scripts {
 dependencies {
     'es_extended',
     'ox_lib',
-    'ox_inventory'
+    'ox_inventory',
+    'PolyZone'
 }

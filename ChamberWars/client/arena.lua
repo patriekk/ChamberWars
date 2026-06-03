@@ -135,6 +135,29 @@ local function lockArenaPed()
     DisablePlayerFiring(PlayerId(), true)
 end
 
+local function prepareArenaPed()
+    SetEntityInvincible(cache.ped, true)
+    FreezeEntityPosition(cache.ped, false)
+    SetPlayerControl(PlayerId(), true, 0)
+    DisablePlayerFiring(PlayerId(), true)
+end
+
+local weaponVoteOpening = false
+local pendingWeaponVoteData = nil
+
+local function waitForArenaPedLanded()
+    local timeout = GetGameTimer() + (Config.Match.preVoteLoadMs or 2500)
+
+    while GetGameTimer() < timeout do
+        if not IsEntityInAir(cache.ped) and not IsPedFalling(cache.ped) then
+            Wait(250)
+            return
+        end
+
+        Wait(100)
+    end
+end
+
 local function weaponHashFromItem(itemName)
     return joaat(itemName or Config.Items.pistol)
 end
@@ -337,6 +360,8 @@ local function spawnTestBots()
 end
 
 RegisterNetEvent('CHW:client:startMatch', function(data)
+    weaponVoteOpening = false
+    pendingWeaponVoteData = nil
     leaveSpectator()
     resetArenaPed()
     SetNuiFocus(false, false)
@@ -378,7 +403,7 @@ RegisterNetEvent('CHW:client:startMatch', function(data)
             maxRows = data.leaderboard.maxRows or Config.Leaderboard.maxRows
         })
     end
-    lockArenaPed()
+    prepareArenaPed()
 
     if data.spawnTestBots then
         CHWClient.activeMatch.testBots = spawnTestBots()
@@ -404,13 +429,22 @@ RegisterNetEvent('CHW:client:weaponVoteUpdate', function(data)
         return
     end
 
+    pendingWeaponVoteData = data
+    if weaponVoteOpening then
+        return
+    end
+
+    weaponVoteOpening = true
     match.introActive = true
+    waitForArenaPedLanded()
     lockArenaPed()
     SetNuiFocus(true, true)
     SendNUIMessage({
         action = 'showWeaponVote',
-        data = data
+        data = pendingWeaponVoteData
     })
+    pendingWeaponVoteData = nil
+    weaponVoteOpening = false
 end)
 
 RegisterNetEvent('CHW:client:weaponVoteTiebreak', function(data)
@@ -440,6 +474,8 @@ RegisterNetEvent('CHW:client:weaponSelected', function(data)
 
     SetNuiFocus(false, false)
     SendNUIMessage({ action = 'hideWeaponVote' })
+    pendingWeaponVoteData = nil
+    weaponVoteOpening = false
 
     if match.primarySlot then
         exports.ox_inventory:useSlot(match.primarySlot, true)
@@ -564,22 +600,6 @@ RegisterNetEvent('CHW:client:removeTestBot', function(botIndex)
     if match and match.testBots then
         match.testBots[botIndex] = nil
     end
-end)
-
-RegisterNetEvent('CHW:client:winReturnDelay', function(seconds)
-    if not CHWClient.activeMatch then
-        return
-    end
-
-    SetEntityInvincible(cache.ped, true)
-    FreezeEntityPosition(cache.ped, true)
-    lib.progressCircle({
-        duration = seconds * 1000,
-        label = 'Overwinning! Terugkeren naar RP...',
-        position = 'bottom',
-        canCancel = false,
-        disable = { move = true, combat = true, car = true }
-    })
 end)
 
 RegisterNetEvent('CHW:client:unlockInvalidDamage', function()

@@ -75,6 +75,13 @@ RegisterNetEvent('CHW:client:lobbyUpdate', function(data)
     })
 end)
 
+RegisterNetEvent('CHW:client:lobbyListUpdate', function(lobbies)
+    SendNUIMessage({
+        action = 'updateChamberLobbies',
+        lobbies = lobbies or {}
+    })
+end)
+
 RegisterNUICallback('chamberAction', function(data, cb)
     local action = data and data.type
 
