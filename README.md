@@ -69,7 +69,7 @@
 ## 🎬 BEKIJK DE GAMEMODE IN ACTIE
 
 <br/>
-
+> Met dank aan Toepas voor het opnemen en uploaden van de demonstratievideo’s.
 <!-- Video en logo gameplay -->
 [![Gamemode Preview](https://toepas.com/combatgain/devsollifiles/ChamberWarsLogoOfficial.png)](https://www.youtube.com/watch?v=AQv3ghN2JH4)
 
@@ -107,8 +107,8 @@
 <!-- Extra video 2 -->
 [![Uitleg Video 2](https://toepas.com/combatgain/devsollifiles/ExtraLeven.png)](https://www.youtube.com/watch?v=r5w9QqRQ9rY)
 
-**📌 5 killstreak bericht**  
-*Hier zie je het bericht van 5 killstreak https://www.youtube.com/watch?v=r5w9QqRQ9rY*
+**📌 5-killstreak melding**  
+*Hier zie je de melding wanneer je een 5-killstreak haalt https://www.youtube.com/watch?v=r5w9QqRQ9rY*
 
 </td>
 
