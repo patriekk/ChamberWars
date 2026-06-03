@@ -44,7 +44,7 @@
 
 - 🔴 Eigen lobby starten en joinen
 - 🔴 Weapon vote voor de start van de ronde
-- 🔴 3 levens systeem met hartjes-HUD
+- 🔴 3 levenssysteem met hartjes-HUD
 - 🔴 Extra leven bij killstreak
 - 🔴 Killfeed en leaderboard
 - 🔴 Deathcam/spectator flow
