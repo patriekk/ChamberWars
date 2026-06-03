@@ -68,6 +68,7 @@
 - NPC/interactie checks slapen langer wanneer de speler niet in de buurt is.
 - Cleanup gebeurt alleen bij match end, player drop en resource stop.
 
+---
 
 ## 🛡️ Anti-cheat maatregelen
 
@@ -78,7 +79,7 @@
 - Gevoelige events hebben rate limits.
 - Arena-wapens worden tijdelijk gegeven en na de match opgeschoond.
 
-
+---
 <!-- ═══════════════════════════════════════════════════════════ -->
 <!--                      HOOFD VIDEO                           -->
 <!-- ═══════════════════════════════════════════════════════════ -->
