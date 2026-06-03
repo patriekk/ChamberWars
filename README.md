@@ -8,7 +8,7 @@
 
 <br/>
 
-<!-- Badges — pas de URLs aan naar jouw repo -->
+<!-- Badges — -->
 [![GitHub Stars](https://img.shields.io/github/stars/patriekk/ChamberWars?style=for-the-badge&logo=github&color=cc0000&labelColor=0d0d0d)](https://github.com/patriekk/ChamberWars/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/patriekk/ChamberWars?style=for-the-badge&logo=github&color=cc0000&labelColor=0d0d0d)](https://github.com/patriekk/ChamberWars/network/)
 [![Discord](https://img.shields.io/badge/DISCORD-Profile-cc0000?style=for-the-badge&logo=discord&logoColor=white&labelColor=0d0d0d)](https://discord.com/users/163249785405571073)
@@ -29,19 +29,28 @@
 
 </div>
 
-> **Chamber Wars** is een gamemode gebasseerd op de **one in a chamber** gamemode van black ops 2.  
-> Ik heb dit gekozen omdat ik dit bij CombatGain vind passen vanwege het combat. Pascal (Toepas) en ik hebben gekeken op het internet en we hebben geen enkel script gevonden die hierop lijkt en dus vonden we dit zeker uniek!
+> **Chamber Wars** is een eigen FiveM minigame die ik volledig heb uitgewerkt in Lua voor deze proefopdracht. 
+> Het concept draait om snelle arena-rondes waarin spelers met beperkte levens tegen elkaar spelen. Voor elke ronde is er een lobby, weapon vote, lives-systeem, killfeed, leaderboard en beloning voor de winnaar 
+> Ik heb gekozen voor dit concept omdat het goed past bij CombatGain en genoeg ruimte geeft om te laten zien hoe ik omga met client/server logica, ox_lib, performance en anti-cheat checks.
 
 <br/>
 
-<table>
+<table> 
 <tr>
 <td width="100%">
 
-### ⚡ Features
-- 🔴 **Feature één** — Eigen lobby starten/joinen
-- 🔴 **Feature twee** — Vote systeem voor wapen  
-- 🔴 **Feature drie** — Extra hartje na killstreak
+## ⚡ Features
+## ⚡ Features
+
+- 🔴 Eigen lobby starten en joinen
+- 🔴 Weapon vote voor de start van de ronde
+- 🔴 3 levens systeem met hartjes-HUD
+- 🔴 Extra leven bij killstreak
+- 🔴 Killfeed en leaderboard
+- 🔴 Deathcam/spectator flow
+- 🔴 Tijdelijke arena-wapens via ox_inventory
+- 🔴 Server-side checks op hits, wapens, afstand en match state
+- 🔴 Cleanup bij einde match, player drop en resource stop
 
 </td>
 </tr>
