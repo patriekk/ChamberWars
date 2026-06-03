@@ -60,6 +60,25 @@
 
 ---
 
+## 🚀 Performance aanpak
+
+- De meeste matchlogica draait event-based.
+- Er worden geen onnodige server-side loops gebruikt.
+- Client checks draaien alleen wanneer een speler actief in een match zit.
+- NPC/interactie checks slapen langer wanneer de speler niet in de buurt is.
+- Cleanup gebeurt alleen bij match end, player drop en resource stop.
+
+
+## 🛡️ Anti-cheat maatregelen
+
+- Belangrijke matchdata zoals lives, kills, lobby state en winnaar wordt server-side bijgehouden.
+- Client events worden niet blind vertrouwd.
+- Hits worden server-side gecontroleerd op match state, wapen, afstand en arena-inventory.
+- Starten via de NPC wordt server-side gecontroleerd op afstand.
+- Gevoelige events hebben rate limits.
+- Arena-wapens worden tijdelijk gegeven en na de match opgeschoond.
+
+
 <!-- ═══════════════════════════════════════════════════════════ -->
 <!--                      HOOFD VIDEO                           -->
 <!-- ═══════════════════════════════════════════════════════════ -->
