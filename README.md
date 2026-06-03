@@ -131,6 +131,6 @@
 
 **Gemaakt door [Patrick](https://github.com/patriekk)** &nbsp;•&nbsp;
 
-<sub>© 2026 Patrick — Alle rechten voorbehouden</sub>
+<sub>© 2026 Patrick</sub>
 
 </div>
